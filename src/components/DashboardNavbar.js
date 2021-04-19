@@ -13,9 +13,19 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import Logo from './Logo';
+import { useNavigate} from 'react-router-dom'
+
 
 const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
   const [notifications] = useState([]);
+  const navigate=useNavigate();
+
+  const handleLogout=() =>{
+localStorage.removeItem('my-token');
+localStorage.removeItem('user-data')
+navigate('/', { push: true })
+
+  }
 
   return (
     <AppBar
@@ -37,7 +47,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton color="inherit" onClick={()=>handleLogout()}>
             <InputIcon />
           </IconButton>
         </Hidden>

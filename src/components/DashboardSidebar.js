@@ -23,11 +23,6 @@ import {
 } from 'react-feather';
 import NavItem from './NavItem';
 
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
-};
 
 const items = [
   {
@@ -74,7 +69,8 @@ const items = [
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
-
+const user= JSON.parse(localStorage.getItem('user-data')).user;
+console.log(user);
   useEffect(() => {
     if (openMobile && onMobileClose) {
       onMobileClose();
@@ -105,18 +101,18 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
             height: 64,
             backgroundColor:"#5664d2" 
           }}
-          to="/app/account">N</Avatar>
+          to="/app/account">{user.fullName.charAt(0)}</Avatar>
         <Typography
           color="textPrimary"
           variant="h5"
         >
-          {user.name}
+          {user.fullName}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body2"
         >
-          {user.jobTitle}
+          {user.role}
         </Typography>
       </Box>
       <Divider />

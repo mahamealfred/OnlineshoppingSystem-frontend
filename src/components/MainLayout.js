@@ -1,6 +1,9 @@
 import { Outlet } from 'react-router-dom';
 import { experimentalStyled } from '@material-ui/core';
 import MainNavbar from './MainNavbar';
+import jwt from 'jsonwebtoken';
+import {useEffect} from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 
 const MainLayoutRoot = experimentalStyled('div')(
@@ -32,9 +35,34 @@ const MainLayoutContent = experimentalStyled('div')({
   height: '100%',
   overflow: 'auto'
 });
+ const decode= (token) => {
+  const JWT_SECRET="mahame123";
+  const payload =jwt.verify(token, JWT_SECRET);
+   return payload;
+}
 
-const MainLayout = () => (
-  <MainLayoutRoot>
+const MainLayout = () => {
+  const navigate= useNavigate();
+  useEffect(() => {
+    const token =localStorage.getItem('my-token');
+    if(token){
+      const {exp}=decode(token);
+      console.log(navigate)
+      if(Date.now()>=exp*1000){
+    return null;
+      }
+      else{
+      navigate('/app/dashboard', { push: true })
+      }
+      console.log(exp)
+    }
+  
+  }, [])
+
+
+
+  return (
+   <MainLayoutRoot>
     <MainNavbar />
     <MainLayoutWrapper>
       <MainLayoutContainer>
@@ -45,5 +73,6 @@ const MainLayout = () => (
     </MainLayoutWrapper>
   </MainLayoutRoot>
 );
+  }
 
 export default MainLayout;

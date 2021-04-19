@@ -8,7 +8,7 @@ const CartItem = () => {
             </div>
             <Link to={`/product/${122}`} className="cartitem__name"> <p>Product 1</p></Link>
               <p className="cartitem_price">$499.9</p>
-              <select cartitem_select>
+              <select cartitem__select>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>

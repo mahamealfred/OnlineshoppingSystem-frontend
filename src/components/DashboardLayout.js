@@ -3,6 +3,9 @@ import { Outlet } from 'react-router-dom';
 import { experimentalStyled } from '@material-ui/core';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
+import jwt from 'jsonwebtoken';
+import {useEffect} from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 const DashboardLayoutRoot = experimentalStyled('div')(
   ({ theme }) => ({
@@ -37,10 +40,31 @@ const DashboardLayoutContent = experimentalStyled('div')({
   height: '100%',
   overflow: 'auto'
 });
-
+const decode= (token) => {
+  const JWT_SECRET="mahame123";
+  const payload =jwt.verify(token, JWT_SECRET);
+   return payload;
+}
 const DashboardLayout = () => {
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
+  const navigate= useNavigate();
+  useEffect(() => {
+    console.log("bite c");
+    const token =localStorage.getItem('my-token');
+    if (token) {
+    const {exp}=decode(token);
+    console.log(navigate)
+    if(Date.now()>=exp*1000){
+      localStorage.removeItem("my-token")
+     return navigate('/', { push: true })
+    }
+    else{
+      return null
+    }
+  }
+  return navigate('/', { push: true })
 
+  }, [])
   return (
     <DashboardLayoutRoot>
       <DashboardNavbar onMobileNavOpen={() => setMobileNavOpen(true)} />

@@ -1,11 +1,11 @@
 import axios from "axios";
 import {
-  CATEGORIES_REQUEST,
-  CATEGORIES_SUCCESS,
-  CATEGORIES_FAILURE,
-} from "../types/categoriesTypes";
+  ADD_CATEGORIES_REQUEST,
+  ADD_CATEGORIES_SUCCESS,
+  ADD_CATEGORIES_FAILURE,
+} from "../types/addCategoryTypes";
 
-export  const getCategoriesAction = () => async (dispatch) => {
+export const addCategoryAction = (data,navigate) => async (dispatch) => {
   try {
     dispatch(categoriesRequest());
     const token = await localStorage.getItem("my-token");
@@ -20,12 +20,18 @@ export  const getCategoriesAction = () => async (dispatch) => {
         "Content-Type": "application/json",
       };
     }
-    const res = await axios.get(`http://localhost:5000/category`, {
+    const res = await axios.post(`http://localhost:5000/category/save`,
+    data,
+     {
       headers: headers,
     });
-    const categories = await res.data;
-    console.log(categories.data)
-    dispatch(categoriesSuccess(categories.data ));
+
+    const category = await res.data;
+    localStorage.setItem('my-token', user.data.token);
+    localStorage.setItem('category-data', JSON.stringify(category.data));
+    dispatch(loginUserSuccess({ data: category.data }));
+    navigate('/app/dashboard', { replace: true })
+   
   } catch (err) {
     if (err.response) {
       const errorMessage = await err.response.data.message;
@@ -38,19 +44,19 @@ export  const getCategoriesAction = () => async (dispatch) => {
 
 export const categoriesRequest = () => {
   return {
-    type: CATEGORIES_REQUEST,
+    type: ADD_CATEGORIES_REQUEST,
   };
 };
 
 export const categoriesSuccess = (categories) => {
   return {
-    type: CATEGORIES_SUCCESS,
+    type: ADD_CATEGORIES_SUCCESS,
     payload: categories,
   };
 };
 export const categoriesFailure = (error) => {
   return {
-    type: CATEGORIES_FAILURE,
+    type: ADD_CATEGORIES_FAILURE,
     payload: error,
   };
 };
