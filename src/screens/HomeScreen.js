@@ -1,21 +1,40 @@
-import Product from 'src/components/Home/Product'
-import './HomeScreen.css'
+import { useState, useEffect } from "react";
+import ProductComponent from "./ProductScreen";
+import { useSelector, useDispatch } from "react-redux";
+import { getProductsAction } from "../redux/actions/productsAction";
 
 const HomeScreen = () => {
-    return (
-        <div className="homescreen">
-             <h2 className="homescreen__title">Product list</h2>
-                 <div className="homescreen__products">
-                   <Product />
-                   <Product />
-                   <Product />
-                   <Product />
-                   <Product />
-                   <Product />
-                   <Product />
-                  </div>
-         </div>
-    )
-}
+  const productsState = useSelector((state) => state.products);
+  const dispatch = useDispatch();
+  const [products, setProducts] = useState([]);
 
-export default HomeScreen
+  const get = async () => {
+    await dispatch(getProductsAction());
+  };
+
+  useEffect(() => {
+    get();
+  }, []);
+
+  useEffect(() => {
+    if (!productsState.loading) {
+      if (productsState.products) {
+        setProducts(productsState.products);
+      }
+    }
+  }, [productsState.products]);
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexdirection: "row",
+        flexWrap: "wrap",
+        marginTop: "35px",
+      }}
+    >
+      {products.length > 0 ? products.map((row) => <ProductComponent data={row}  />) : null}
+    </div>
+  );
+};
+
+export default HomeScreen;

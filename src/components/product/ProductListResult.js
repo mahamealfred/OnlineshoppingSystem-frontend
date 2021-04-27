@@ -32,18 +32,49 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { deleteProductAction } from '../../redux/actions/deleteProductAction';
+import { updateProductAction } from "../../redux/actions/updateProductAction";
+import {getProductsAction} from '../../redux/actions/productsAction';
 
 const ProductListResult = ({ ...rest }) => {
   const productsState = useSelector((state) => state.products);
   const deleteProductState = useSelector((state) => state.deleteProductState);
+  const updateProductState = useSelector((state) => state.updateProduct);
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch()
   const [results, setResults] = useState({});
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [search, setSearch] = useState(false);
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [productId, setproductId] = useState(0);
+  const [name, setName] = useState('');
+  const [categoryId, setcategoryId] = useState('');
+  const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [description, setDescription] = useState('');
+  
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const handleUpdate = async () => {
+    if (!name) {
+      return alert("name is required");
+    }
+    await dispatch(updateProductAction({ name,categoryId,price,quantity,imageUrl,description, id: productId }));
+    setOpenUpdate(false);
+    setName("");
+    setcategoryId("");
+    setPrice("");
+    setQuantity("");
+    setImageUrl("");
+    setDescription("");
+    setSearch(false)
+    await dispatch(getProductsAction());
+  };
+  const handleCloseUpdate = () => {
+    setOpenUpdate(false);
   };
 
   const handleClose = () => {
@@ -63,7 +94,6 @@ const ProductListResult = ({ ...rest }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 const [productName, setproductName]= useState('');
-const [productId, setproductId]= useState(0);
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
   };
@@ -145,6 +175,98 @@ const [productId, setproductId]= useState(0);
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog
+     open={openUpdate}
+     onClose={handleCloseUpdate}
+     aria-labelledby="alert-dialog-title"
+     aria-describedby="alert-dialog-description"
+   >
+     <DialogTitle id="alert-dialog-title">{"Update Product"}</DialogTitle>
+     <DialogContent>
+          <TextField
+            fullWidth
+            label="Product Name"
+            margin="normal"
+            name="name"
+            onChange={(e)=> setName(e.target.value)}
+            type="text"
+            value={name}
+            variant="outlined"
+          />
+
+          <TextField
+            fullWidth
+            label="Category Id"
+            margin="normal"
+            name="categoryId"
+            onChange={(e)=> setcategoryId(e.target.value)}
+            type="text"
+            value={categoryId}
+            variant="outlined"
+          />
+       
+    
+    
+          <TextField
+            fullWidth
+            label="Price"
+            margin="normal"
+            name="price"
+            onChange={(e)=> setPrice(e.target.value)}
+            type="text"
+            value={price}
+            variant="outlined"
+          />
+       
+     
+          <TextField
+            fullWidth
+            label="Quantity"
+            margin="normal"
+            name="quantity"
+            onChange={(e)=> setQuantity(e.target.value)}
+            type="text"
+            value={quantity}
+            variant="outlined"
+          />
+       
+   
+  
+          <TextField
+            fullWidth
+            label="Image"
+            margin="normal"
+            name="imageUrl"
+            onChange={(e)=> setImageUrl(e.target.value)}
+            type="text"
+            value={imageUrl}
+            variant="outlined"
+          />
+       
+     
+    
+          <TextField
+            fullWidth
+            label="Description"
+            margin="normal"
+            name="description"
+            onChange={(e)=> setDescription(e.target.value)}
+            type="text"
+            value={description}
+            variant="outlined"
+          />
+       
+     </DialogContent>
+     <DialogActions>
+       <Button onClick={handleCloseUpdate}  color="primary">
+         Cancel
+       </Button>
+       <Button onClick={handleUpdate} color="primary" autoFocus>
+       { updateProductState.loading ? "Loading..." : "Update Product"}
+       </Button>
+     </DialogActions>
+   </Dialog>
       <Box sx={{ mt: 3 }}>
       <Card>
         <CardContent>
@@ -320,7 +442,7 @@ const [productId, setproductId]= useState(0);
                       }}
                     >
                       <Typography color="textPrimary" variant="body1">
-                        {product.productId}
+                        {product.categoryId}
                       </Typography>
                     </Box>
                   </TableCell>
@@ -367,7 +489,18 @@ const [productId, setproductId]= useState(0);
                     {moment(product.updatedAt).format("DD/MM/YYYY")}
                   </TableCell>
                   <TableCell color="textPrimary" variant="body1">
-                  <IconButton aria-label="update">
+                  <IconButton aria-label="update"
+                   onClick={() => {
+                    setproductId(product.id);
+                    setName(product.name);
+                    setcategoryId(product.categoryId);
+                    setPrice(product.price);
+                    setImageUrl(product.imageUrl);
+                    setDescription(product.description)
+                    setQuantity(product.quantity);
+                    setOpenUpdate(true);
+                  }}
+                  >
                       <BorderColorIcon />
                     </IconButton>
                     <IconButton aria-label="delete" color="secondary" onClick={()=> {

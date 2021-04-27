@@ -1,4 +1,4 @@
-import { CATEGORIES_REQUEST, CATEGORIES_SUCCESS, CATEGORIES_FAILURE } from '../types/categoriesTypes';
+import { SIGNUP_USER_REQUEST, SIGNUP_USER_SUCCESS, SIGNUP_USER_FAILURE } from '../types/signupTypes';
 
 const initialState = {
     loading: false,
@@ -8,18 +8,18 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case CATEGORIES_REQUEST:
+        case SIGNUP_USER_REQUEST:
             return {
                 ...state, //spredding
                 loading: true,
             };
-        case CATEGORIES_SUCCESS:
+        case SIGNUP_USER_SUCCESS:
             return {
                 loading: false,
                 user: action.payload,
                 error: '',
             };
-        case CATEGORIES_FAILURE:
+        case SIGNUP_USER_FAILURE:
             return {
                 loading: false,
                 user: [],

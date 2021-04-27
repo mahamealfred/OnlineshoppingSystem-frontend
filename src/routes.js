@@ -15,6 +15,7 @@ import CartScreen from 'src/screens/CartScreen' ;
 import Navbar from './components/Home/Navbar';
 import UserLayout from './components/UserLayout';
 
+
 const routes = [
   {
     path: 'app',
@@ -55,6 +56,8 @@ const routes = [
       { path: '*', element: <Navigate to="/404" /> }
     ]
   }
+  
+  
  
 ];
 

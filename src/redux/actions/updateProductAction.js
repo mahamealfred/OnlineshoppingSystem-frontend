@@ -20,6 +20,7 @@ export const updateProductAction = (data) => async (dispatch) => {
         "Content-Type": "application/json",
       };
     }
+  
     const res = await axios.patch(`http://localhost:5000/products/${data.id}`,
     {
         name: data.name,
@@ -27,7 +28,8 @@ export const updateProductAction = (data) => async (dispatch) => {
         price: data.price,
         imageUrl: data.imageUrl,
         quantity: data.quantity,
-        Description: data.description
+        description: data.description
+       
         
     },
      {
@@ -44,7 +46,7 @@ export const updateProductAction = (data) => async (dispatch) => {
       const errorMessage = await err.response.data.message;
       dispatch(updateProductFailure(errorMessage));
     } else {
-      dispatch(updateProductFailure("Network n Error"));
+      dispatch(updateProductFailure("Network  Error"));
     }
   }
 };

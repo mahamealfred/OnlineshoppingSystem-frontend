@@ -29,12 +29,10 @@ let headers
             data
             ,{headers:headers}
         );
-        const user = await res.data;
-         localStorage.setItem('user-data', JSON.stringify(user.data));
+        const user = await res.data
         dispatch(signupUserSuccess({ data: user.data }));
-        history.push('/signin')
-        console.log(user)
     } catch (err) {
+        console.log(err)
         if (err.response) {
             const errorMessage = await err.response.data.message;
             dispatch(signupUserFailure(errorMessage));

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Avatar,
@@ -69,8 +69,17 @@ const items = [
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
   const location = useLocation();
-const user= JSON.parse(localStorage.getItem('user-data')).user;
-console.log(user);
+  const navigate= useNavigate();
+  let user
+if(localStorage.getItem('user-data')){
+   user= JSON.parse(localStorage.getItem('user-data')).user;
+  if(!user){
+    // return navigate('/', { push: true })
+  }
+}
+else{
+  // return navigate('/', { push: true })
+}
   useEffect(() => {
     if (openMobile && onMobileClose) {
       onMobileClose();
@@ -101,7 +110,7 @@ console.log(user);
             height: 64,
             backgroundColor:"#5664d2" 
           }}
-          to="/app/account">{user.fullName.charAt(0)}</Avatar>
+          to="/app/account">{user ? user.fullName.charAt(0) : null}</Avatar>
         <Typography
           color="textPrimary"
           variant="h5"
@@ -112,7 +121,7 @@ console.log(user);
           color="textSecondary"
           variant="body2"
         >
-          {user.role}
+          {user? user.role : null}
         </Typography>
       </Box>
       <Divider />

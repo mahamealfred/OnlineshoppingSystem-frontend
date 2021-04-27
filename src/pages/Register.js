@@ -12,10 +12,12 @@ import {
   TextField,
   Typography
 } from '@material-ui/core';
+import { useSelector, useDispatch } from 'react-redux';
 
 const Register = () => {
   const navigate = useNavigate();
-
+  const signup = useSelector(state => state.signup)
+  const dispatch = useDispatch()
   return (
     <>
       <Helmet>
@@ -33,17 +35,15 @@ const Register = () => {
         <Container maxWidth="sm">
           <Formik
             initialValues={{
+              fullName: '',
               email: '',
-              firstName: '',
-              lastName: '',
               password: '',
               policy: false
             }}
             validationSchema={
               Yup.object().shape({
                 email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-                firstName: Yup.string().max(255).required('First name is required'),
-                lastName: Yup.string().max(255).required('Last name is required'),
+                fullName: Yup.string().max(255).required('Full name is required'),
                 password: Yup.string().max(255).required('password is required'),
                 policy: Yup.boolean().oneOf([true], 'This field must be checked')
               })
@@ -78,29 +78,18 @@ const Register = () => {
                   </Typography>
                 </Box>
                 <TextField
-                  error={Boolean(touched.firstName && errors.firstName)}
+                  error={Boolean(touched.fullName && errors.fullName)}
                   fullWidth
-                  helperText={touched.firstName && errors.firstName}
+                  helperText={touched.fullName && errors.fullName}
                   label="First name"
                   margin="normal"
-                  name="firstName"
+                  name="fullName"
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  value={values.firstName}
+                  value={values.fullName}
                   variant="outlined"
                 />
-                <TextField
-                  error={Boolean(touched.lastName && errors.lastName)}
-                  fullWidth
-                  helperText={touched.lastName && errors.lastName}
-                  label="Last name"
-                  margin="normal"
-                  name="lastName"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  value={values.lastName}
-                  variant="outlined"
-                />
+              
                 <TextField
                   error={Boolean(touched.email && errors.email)}
                   fullWidth
